@@ -5,7 +5,7 @@
 <style>
 :root{--bg:#faf6ec;--c:#fff;--t:#2a1f0a;--m:#7a6a48;--g:#b8860b;--d:#3b2a0a;--b:#e5dcc3}
 @media(prefers-color-scheme:dark){:root{--bg:#17130b;--c:#241d10;--t:#f3ead2;--m:#a99a76;--b:#3a2f18}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:15px system-ui,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+*{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}.g2>*,.row>*{min-width:0}input,select{min-width:0;max-width:100%}input[type=file]{font-size:13px}body{margin:0;background:var(--bg);color:var(--t);font:15px system-ui,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 main{max-width:480px;margin:auto;padding:8px 10px 70px}
 .rates{position:sticky;top:0;z-index:5;background:var(--d);color:#f6e7b8;padding:8px 10px;display:flex;justify-content:space-between;font-size:13px}
 .rates b{font-size:16px;color:#ffd35a}.ri{width:112px;background:#2a1d06;color:#ffd35a;border:1px dashed #8a6d2a;font-weight:700;padding:5px 6px;font-size:16px;border-radius:6px}.ri[readonly]{border-style:solid}.st{font-size:11px;opacity:.8}
@@ -16,7 +16,7 @@ input[readonly]{background:transparent;border-style:dashed}
 button{padding:10px 12px;border:0;border-radius:9px;background:var(--g);color:#fff;font-weight:600;font-size:14px}
 button.s{background:transparent;color:var(--g);border:1px solid var(--g)}button.r{background:#b3261e}
 .row{display:flex;gap:8px;margin:6px 0;align-items:center}.row>*{flex:1}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--d);padding-bottom:env(safe-area-inset-bottom)}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;background:var(--d);padding-bottom:env(safe-area-inset-bottom)}
 nav button{flex:1;background:none;border-radius:0;color:#cdb98a;padding:14px 4px}nav button.on{color:#ffd35a;border-top:3px solid #ffd35a}
 .it{display:flex;justify-content:space-between;border-bottom:1px solid var(--b);padding:6px 0;font-size:13px}
 .tot{display:flex;justify-content:space-between;padding:3px 0}.big{font-size:19px;font-weight:700}
@@ -42,7 +42,7 @@ nav button{flex:1;background:none;border-radius:0;color:#cdb98a;padding:14px 4px
 <div><label>Making value</label><input id="f_lab" class="G" data-l="Making/labour" type="number" step="any" inputmode="decimal"></div>
 </div>
 <div class="tot" style="margin-top:8px"><span>Net wt</span><b id="pv_net">0</b></div>
-<div class="tot"><span>Item total</span><b id="pv_tot">₹0</b></div>
+<div class="tot"><span>Metal value</span><span id="pv_m">₹0</span></div><div class="tot"><span>Making</span><span id="pv_l">₹0</span></div><div class="tot"><span>Stone</span><span id="pv_s">₹0</span></div><div class="tot"><span>Item total</span><b id="pv_tot">₹0</b></div>
 <div class="row"><button id="add">＋ Add to estimate</button><button class="s" id="clr">Clear</button></div>
 </div>
 <div class="card"><div id="list"></div>
@@ -66,9 +66,13 @@ nav button{flex:1;background:none;border-radius:0;color:#cdb98a;padding:14px 4px
 </main>
 <nav><button data-t="e" class="on">Estimate</button><button data-t="h">History</button><button data-t="s">Day</button><button data-t="c">Setup</button></nav>
 <div id="cam"><video id="v" playsinline muted></video><button id="camx" class="r">Cancel</button></div>
-<div id="pa"></div>
+<div id="md" style="display:none;position:fixed;inset:0;background:#0009;z-index:50;align-items:center;justify-content:center"><div class="card" style="width:82%;max-width:340px"><p id="mq" style="font-size:16px"></p><div class="row"><button id="my">Yes</button><button class="s" id="mn">No</button></div></div></div><div id="ts" style="display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(72px + env(safe-area-inset-bottom));background:#3b2a0a;color:#ffd35a;padding:10px 16px;border-radius:20px;z-index:60;max-width:88%;text-align:center;font-size:14px"></div><div id="pa"></div>
 <script>
 const $=i=>document.getElementById(i),ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},sv=(k,v)=>{try{const j=JSON.stringify(v);localStorage.setItem(k,j);return localStorage.getItem(k)===j}catch(e){return false}};
+let _cb;const ask=(m,cb)=>{$('mq').textContent=m;$('md').style.display='flex';_cb=cb};
+$('my').onclick=()=>{$('md').style.display='none';const c=_cb;_cb=null;c&&c()};$('mn').onclick=()=>{$('md').style.display='none';_cb=null};
+function toast(m){const t=$('ts');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2800)}
+window.alert=toast;
 let set=Object.assign({gst:3,g:0,s:0,url:'',gp:'',sp:'',gd:10,sd:1000,sec:1},ld('je_set',{})),master=ld('je_master',{}),ests=ld('je_ests',[]),items=[],live={};
 const F=['barcode','name','metal','purity','gross','stone','wast','stoneC','labT','lab'],N=x=>parseFloat(x)||0,R=x=>'₹'+Math.round(x).toLocaleString('en-IN'),W=x=>(+x).toFixed(3);
 const cur=m=>set['m'+m]?set[m]:(live[m]||set[m]),base=m=>cur(m)/(m=='g'?set.gd:set.sd);
@@ -76,12 +80,12 @@ const get=()=>{const o={};F.forEach(k=>o[k]=$('f_'+k).value);return o};
 function calc(o,rt){const net=Math.max(0,N(o.gross)-N(o.stone)),mv=net*(1+N(o.wast)/100)*(rt??base(o.metal))*N(o.purity)/99.9;const lab=o.labT=='g'?N(o.lab)*net:o.labT=='f'?N(o.lab):mv*N(o.lab)/100;return{net,mv,lab,total:mv+lab+N(o.stoneC)}}
 function lock(){F.forEach(k=>{const e=$('f_'+k);if(e.tagName=='INPUT'&&k!='barcode')e.readOnly=e.value!==''})}
 function fill(o){F.forEach(k=>{if(o[k]!==undefined&&k!='barcode')$('f_'+k).value=o[k]});lock();pv()}
-function pv(){const o=get(),c=calc(o);$('pv_net').textContent=W(c.net)+' g';$('pv_tot').textContent=R(c.total)}
+function pv(){const o=get(),c=calc(o);$('pv_net').textContent=W(c.net)+' g';$('pv_m').textContent=R(c.mv);$('pv_l').textContent=R(c.lab);$('pv_s').textContent=R(N(o.stoneC));$('pv_tot').textContent=R(c.total)}
 // confirm-before-edit
 document.querySelectorAll('.G').forEach(e=>{e.dataset.p=e.value;
- if(e.tagName=='INPUT'){e.addEventListener('focus',()=>{if(e.readOnly){if(confirm('Edit '+e.dataset.l+'?')){e.readOnly=false;e._k=1;setTimeout(()=>{e.blur();e.focus();e._k=0},30)}else e.blur()}});
-  e.addEventListener('blur',()=>{if(!e._k&&e.value!==''&&e.id!='f_barcode')e.readOnly=true})}
- else{e.addEventListener('change',()=>{if(confirm('Change '+e.dataset.l+'?')){e.dataset.p=e.value;if(e.id=='f_metal'&&!N($('f_purity').value))$('f_purity').value=e.value=='g'?91.6:92.5}else e.value=e.dataset.p;pv()})}
+ if(e.tagName=='INPUT'){e.addEventListener('focus',()=>{if(e.readOnly){e.blur();ask('Edit '+e.dataset.l+'?',()=>{e.readOnly=false;e.focus()})}});
+  e.addEventListener('blur',()=>{if(e.value!==''&&e.id!='f_barcode')e.readOnly=true})}
+ else{e.addEventListener('change',()=>{const nv=e.value,ap=()=>{e.value=nv;e.dataset.p=nv;if(e.id=='f_metal'&&!N($('f_purity').value))$('f_purity').value=nv=='g'?91.6:92.5;pv()};if(!N($('f_gross').value))ap();else{e.value=e.dataset.p;ask('Change '+e.dataset.l+'?',ap)}})}
  e.addEventListener('input',pv)});
 function look(code){code=code.trim();if(!code)return;$('f_barcode').value=code;let r=master[code];
  if(!r){const p=code.split(/[|,]/);if(p.length>=6)r={name:p[1],metal:p[2],purity:p[3],gross:p[4],stone:p[5],wast:p[6],labT:p[7],lab:p[8],stoneC:p[9]}}
@@ -101,9 +105,9 @@ $('scanb').onclick=scan;$('camx').onclick=stopc;
 // estimate
 function unlock(){F.forEach(k=>{const e=$('f_'+k);e.value=k=='metal'?'g':k=='labT'?'g':'';e.readOnly=false;e.dataset.p=e.value})}
 $('clr').onclick=()=>{unlock();pv()};
-$('add').onclick=()=>{const o=get();if(!N(o.gross)){alert('Enter gross weight');return}o.rate=base(o.metal);items.push(o);unlock();pv();draw()};
+$('add').onclick=()=>{try{const o=get();if(!N(o.gross)){toast('Enter gross weight');return}o.rate=base(o.metal);items.push(o);unlock();pv();draw();toast('Added ✓ ('+items.length+' item'+(items.length>1?'s':'')+') — form cleared')}catch(err){toast('Error: '+err.message)}};
 function tots(){const sub=items.reduce((a,o)=>a+calc(o,o.rate).total,0),g=$('gstOn').checked?sub*set.gst/100:0;return{sub,g,t:sub+g}}
-function draw(){$('list').innerHTML=items.map((o,i)=>{const c=calc(o,o.rate);return`<div class="it"><span>${o.name||'Item'} <small>${o.metal=='g'?'Au':'Ag'} ${o.purity} · ${W(c.net)}g</small></span><span>${R(c.total)} <a href="#" onclick="items.splice(${i},1);draw();return false">✕</a></span></div>`}).join('')||'<small>No items yet</small>';const t=tots();$('sub').textContent=R(t.sub);$('gst').textContent=R(t.g);$('tot').textContent=R(t.t)}
+function draw(){$('list').innerHTML=items.map((o,i)=>{const c=calc(o,o.rate);return`<div class="it"><span>${o.name||'Item'} <small>${o.metal=='g'?'Au':'Ag'} ${o.purity} · ${W(c.net)}g<br>Metal ${R(c.mv)} · Making ${R(c.lab)} · Stone ${R(N(o.stoneC))}</small></span><span>${R(c.total)} <a href="#" onclick="items.splice(${i},1);draw();return false">✕</a></span></div>`}).join('')||'<small>No items yet</small>';const t=tots();$('sub').textContent=R(t.sub);$('gst').textContent=R(t.g);$('tot').textContent=R(t.t)}
 $('gstOn').onchange=draw;
 function est(){const t=tots();return{id:Date.now(),ts:Date.now(),cust:$('cust').value,ph:$('ph').value,items:JSON.parse(JSON.stringify(items)),gstOn:$('gstOn').checked,gp:set.gst,sub:t.sub,gst:t.g,total:t.t}}
 function bill(e){const d=new Date(e.ts).toLocaleString('en-IN');return`<p>ESTIMATE (not a tax invoice)<br>${d}<br>${e.cust||''} ${e.ph||''}</p><table><tr><th>Item</th><th>Net g</th><th>Rate</th><th>Amt</th></tr>${e.items.map(o=>{const c=calc(o,o.rate);return`<tr><td>${o.name||'Item'}<br>${o.metal=='g'?'Au':'Ag'} ${o.purity}% W${o.wast||0}% Mk ${R(c.lab)}${N(o.stoneC)?' St '+R(N(o.stoneC)):''}</td><td>${W(c.net)}</td><td>${(o.rate*N(o.purity)/99.9).toFixed(0)}</td><td>${R(c.total)}</td></tr>`}).join('')}</table><p>Subtotal ${R(e.sub)}<br>${e.gstOn?'GST '+e.gp+'% '+R(e.gst)+'<br>':'GST not included<br>'}<b>TOTAL ${R(e.total)}</b></p>`}
@@ -111,7 +115,7 @@ function pr(h){$('pa').innerHTML=h;window.print()}
 $('prn').onclick=()=>{if(!items.length)return alert('Add items first');pr(bill(est()))};
 $('save').onclick=()=>{if(!items.length)return alert('Add items first');const e=est();ests.unshift(e);if(!sv('je_ests',ests)){ests.shift();alert('NOT saved: browser storage is blocked or full. Open the tool from its web link in Chrome/Safari (not inside another app).');return}e.items.forEach(o=>{if(o.barcode)master[o.barcode]={name:o.name,metal:o.metal,purity:o.purity,gross:o.gross,stone:o.stone,wast:o.wast,labT:o.labT,lab:o.lab,stoneC:o.stoneC}});sv('je_master',master);items=[];$('cust').value=$('ph').value='';draw();alert('Saved on this device ('+ests.length+' estimates stored)')};
 // history & summary
-function hist(){$('hist').innerHTML=(ests.map(e=>`<div class="card"><div class="tot"><b>${e.cust||'Walk-in'}</b><b>${R(e.total)}</b></div><small>${new Date(e.ts).toLocaleString('en-IN')} · ${e.items.length} item(s)${e.gstOn?' · GST':''}</small><div class="row"><button class="s" onclick="pr(bill(ests.find(x=>x.id==${e.id})))">Print</button><button class="s r" style="color:#b3261e;border-color:#b3261e" onclick="if(confirm('Delete estimate?')){ests=ests.filter(x=>x.id!=${e.id});sv('je_ests',ests);hist()}">Delete</button></div></div>`).join('')||'<p>No saved estimates</p>')+'<button class="s" style="width:100%" onclick="exp()">Export all (JSON)</button>'}
+function hist(){$('hist').innerHTML=(ests.map(e=>`<div class="card"><div class="tot"><b>${e.cust||'Walk-in'}</b><b>${R(e.total)}</b></div><small>${new Date(e.ts).toLocaleString('en-IN')} · ${e.items.length} item(s)${e.gstOn?' · GST':''}</small><div class="row"><button class="s" onclick="pr(bill(ests.find(x=>x.id==${e.id})))">Print</button><button class="s r" style="color:#b3261e;border-color:#b3261e" onclick="ask('Delete estimate?',()=>{ests=ests.filter(x=>x.id!=${e.id});sv('je_ests',ests);hist()})">Delete</button></div></div>`).join('')||'<p>No saved estimates</p>')+'<button class="s" style="width:100%" onclick="exp()">Export all (JSON)</button>'}
 window.exp=()=>dl('estimates.json',JSON.stringify(ests,null,1));
 function dl(n,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t]));a.download=n;a.click()}
 function summ(){const d=$('sd').value,L=ests.filter(e=>new Date(e.ts).toLocaleDateString('en-CA')==d);let s={n:L.length,sub:0,g:0,t:0,Au:0,Ag:0};L.forEach(e=>{s.sub+=e.sub;s.g+=e.gst;s.t+=e.total;e.items.forEach(o=>s[o.metal=='g'?'Au':'Ag']+=calc(o,o.rate).net)});
@@ -132,10 +136,10 @@ function poll(){clearInterval(timer);live={};if(!set.url){$('rs_st').textContent
  const go=async()=>{try{const j=await (await fetch(set.url,{cache:'no-store'})).json(),g=N(pth(j,set.gp)),s=N(pth(j,set.sp));if(g)live.g=g;if(s)live.s=s;$('rs_st').textContent='● live '+new Date().toLocaleTimeString('en-IN')}catch(e){$('rs_st').textContent='● offline (last/manual)'}rt()};go();timer=setInterval(go,set.sec*1000)}
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 [['g','rg','gold'],['s','rs','silver']].forEach(([m,i,n])=>{const e=$(i);
- e.addEventListener('focus',()=>{if(e.readOnly){if(!e.value||confirm('Edit '+n+' rate?')){e.readOnly=false;e._k=1;setTimeout(()=>{e.blur();e.focus();e._k=0},30)}else e.blur()}});
- e.addEventListener('blur',()=>{if(!e._k)e.readOnly=true});
+ e.addEventListener('focus',()=>{if(e.readOnly){e.blur();if(!e.value){e.readOnly=false;e.focus()}else ask('Edit '+n+' rate?',()=>{e.readOnly=false;e.focus()})}});
+ e.addEventListener('blur',()=>{e.readOnly=true});
  e.addEventListener('change',()=>{const v=N(e.value);if(!v){rt();return}set[m]=v;set['m'+m]=true;set.rtm=Date.now();sv('je_set',set);rt()})});
-$('rs_st').onclick=()=>{if((set.mg||set.ms)&&set.url&&confirm('Switch back to live feed rates?')){set.mg=set.ms=false;sv('je_set',set);poll()}};
+$('rs_st').onclick=()=>{if((set.mg||set.ms)&&set.url)ask('Switch back to live feed rates?',()=>{set.mg=set.ms=false;sv('je_set',set);poll()})};
 draw();cfg();poll();rt();
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))try{}catch(e){}
 </script></body></html>
