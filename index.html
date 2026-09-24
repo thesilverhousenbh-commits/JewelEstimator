@@ -6,25 +6,25 @@
 :root{--bg:#faf6ec;--c:#fff;--t:#2a1f0a;--m:#7a6a48;--g:#b8860b;--d:#3b2a0a;--b:#e5dcc3}
 @media(prefers-color-scheme:dark){:root{--bg:#17130b;--c:#241d10;--t:#f3ead2;--m:#a99a76;--b:#3a2f18}}
 *{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}.g2>*,.row>*{min-width:0}input,select{min-width:0;max-width:100%}input[type=file]{font-size:13px}body{margin:0;background:var(--bg);color:var(--t);font:15px system-ui,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-main{max-width:480px;margin:auto;padding:8px 10px 70px}
-.rates{position:sticky;top:0;z-index:5;background:var(--d);color:#f6e7b8;padding:8px 10px;display:flex;justify-content:space-between;font-size:13px}
-.rates b{font-size:16px;color:#ffd35a}.ri{width:112px;background:#2a1d06;color:#ffd35a;border:1px dashed #8a6d2a;font-weight:700;padding:5px 6px;font-size:16px;border-radius:6px}.ri[readonly]{border-style:solid}.st{font-size:11px;opacity:.8}
+main{max-width:480px;margin:auto;padding:8px 10px 130px}
+.rates{position:sticky;top:0;z-index:5;background:var(--d);color:#f6e7b8;padding:6px 10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 10px;font-size:12px}
+.rates b{font-size:16px;color:#ffd35a}.ri{display:block;width:100%;background:#2a1d06;color:#ffd35a;border:1px dashed #8a6d2a;font-weight:700;padding:5px 6px;font-size:16px;border-radius:6px}.ri[readonly]{border-style:solid}.st{font-size:11px;opacity:.8}
 .card{background:var(--c);border:1px solid var(--b);border-radius:12px;padding:10px;margin:8px 0}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}label{font-size:11px;color:var(--m);display:block}
-input,select{width:100%;padding:9px;border:1px solid var(--b);border-radius:8px;background:var(--bg);color:var(--t);font-size:15px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:340px){.g2{grid-template-columns:minmax(0,1fr)}.g2>*{grid-column:auto!important}}@media(min-width:700px){main{max-width:720px}}html{-webkit-text-size-adjust:100%}label{font-size:11px;color:var(--m);display:block}
+input,select{width:100%;padding:9px;border:1px solid var(--b);border-radius:8px;background:var(--bg);color:var(--t);font-size:16px;min-height:44px}
 input[readonly]{background:transparent;border-style:dashed}
-button{padding:10px 12px;border:0;border-radius:9px;background:var(--g);color:#fff;font-weight:600;font-size:14px}
-button.s{background:transparent;color:var(--g);border:1px solid var(--g)}button.r{background:#b3261e}
+button{padding:10px 12px;border:0;border-radius:9px;background:var(--g);color:#fff;font-weight:600;font-size:14px;min-height:44px;touch-action:manipulation}
+button:disabled{opacity:.55}button.s{background:transparent;color:var(--g);border:1px solid var(--g)}button.r{background:#b3261e}
 .row{display:flex;gap:8px;margin:6px 0;align-items:center}.row>*{flex:1}
 nav{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;background:var(--d);padding-bottom:env(safe-area-inset-bottom)}
 nav button{flex:1;background:none;border-radius:0;color:#cdb98a;padding:14px 4px}nav button.on{color:#ffd35a;border-top:3px solid #ffd35a}
 .it{display:flex;justify-content:space-between;border-bottom:1px solid var(--b);padding:6px 0;font-size:13px}
 .tot{display:flex;justify-content:space-between;padding:3px 0}.big{font-size:19px;font-weight:700}
 #cam{position:fixed;inset:0;background:#000;z-index:20;display:none;flex-direction:column}#cam video{flex:1;object-fit:cover;width:100%}#cam button{margin:14px}
-.tab{display:none}.tab.on{display:block}#pa{display:none}
+.tab{display:none}.tab.on{display:block}#pa{display:none}#fb{display:none;position:fixed;left:8px;right:8px;bottom:calc(54px + env(safe-area-inset-bottom));z-index:9;background:var(--g);color:#fff;border-radius:12px;padding:12px 14px;justify-content:space-between;font-weight:700;box-shadow:0 2px 8px #0006}body[data-tab=e] #fb.has{display:flex}
 @media print{body>*:not(#pa){display:none!important}#pa{display:block;color:#000;background:#fff;font:12px monospace;padding:6px}#pa table{width:100%;border-collapse:collapse}#pa td,#pa th{border-bottom:1px dotted #000;text-align:left;padding:2px}}
-</style></head><body>
-<div class="rates"><div>Gold 24K /<span id="ug"></span><br><input id="rg" class="ri" type="number" inputmode="decimal" placeholder="set rate" readonly></div><div class="st" id="rs_st" style="text-align:center;align-self:center"></div><div style="text-align:right">Silver 999 /<span id="us"></span><br><input id="rs" class="ri" type="number" inputmode="decimal" placeholder="set rate" readonly style="text-align:right"></div></div>
+</style></head><body data-tab="e">
+<div class="rates"><div>Gold 24K /<span id="ug"></span><input id="rg" class="ri" type="number" inputmode="decimal" placeholder="set rate" readonly></div><div style="text-align:right">Silver 999 /<span id="us"></span><input id="rs" class="ri" type="number" inputmode="decimal" placeholder="set rate" readonly style="text-align:right"></div><div class="st" id="rs_st" style="grid-column:1/3;text-align:center"></div></div>
 <main>
 <section id="t_e" class="tab on">
 <div class="card"><div class="g2"><div><label>Customer</label><input id="cust"></div><div><label>Phone</label><input id="ph" type="tel"></div></div></div>
@@ -38,11 +38,11 @@ nav button{flex:1;background:none;border-radius:0;color:#cdb98a;padding:14px 4px
 <div><label>Stone wt (g)</label><input id="f_stone" class="G" data-l="Stone weight" type="number" step="any" inputmode="decimal"></div>
 <div><label>Wastage %</label><input id="f_wast" class="G" data-l="Wastage" type="number" step="any" inputmode="decimal"></div>
 <div><label>Stone charges ₹</label><input id="f_stoneC" class="G" data-l="Stone charges" type="number" step="any" inputmode="decimal"></div>
-<div><label>Making type</label><select id="f_labT" class="G" data-l="Making type"><option value="g">₹ per gram</option><option value="f">₹ flat</option><option value="p">% of metal</option></select></div>
-<div><label>Making value</label><input id="f_lab" class="G" data-l="Making/labour" type="number" step="any" inputmode="decimal"></div>
+<div id="mkg" style="display:none"><div><label>Labour type</label><select id="f_labT" class="G" data-l="Labour type"><option value="g">₹ per gram</option><option value="p">% of melting</option><option value="f">₹ flat</option></select></div>
+<div><label>Labour value</label><input id="f_lab" class="G" data-l="Labour" type="number" step="any" inputmode="decimal"></div></div>
 </div>
 <div class="tot" style="margin-top:8px"><span>Net wt</span><b id="pv_net">0</b></div>
-<div class="tot"><span>Metal value</span><span id="pv_m">₹0</span></div><div class="tot"><span>Making</span><span id="pv_l">₹0</span></div><div class="tot"><span>Stone</span><span id="pv_s">₹0</span></div><div class="tot"><span>Item total</span><b id="pv_tot">₹0</b></div>
+<div class="tot"><span>Metal value</span><span id="pv_m">₹0</span></div><div class="tot" id="pv_lr"><span>Labour</span><span id="pv_l">₹0</span></div><div class="tot"><span>Stone</span><span id="pv_s">₹0</span></div><div class="tot"><span>Item total</span><b id="pv_tot">₹0</b></div>
 <div class="row"><button id="add">＋ Add to estimate</button><button class="s" id="clr">Clear</button></div>
 </div>
 <div class="card"><div id="list"></div>
@@ -59,14 +59,14 @@ nav button{flex:1;background:none;border-radius:0;color:#cdb98a;padding:14px 4px
 <div class="card"><b>GST</b><label>GST %</label><input id="c_gst" type="number" step="any"></div>
 <div class="card"><b>Manual rates (fallback)</b><div class="g2"><div><label>Gold 24K ₹ per <span class="gdl"></span> g</label><input id="c_g" type="number"></div><div><label>Silver 999 ₹ per <span class="sdl"></span> g</label><input id="c_s" type="number"></div></div></div>
 <div class="card"><b>Live rate feed</b><label>JSON API URL (returns gold &amp; silver)</label><input id="c_url" placeholder="https://your-rate-api/..."><div class="g2"><div><label>Gold JSON path</label><input id="c_gp" placeholder="data.gold"></div><div><label>Silver JSON path</label><input id="c_sp" placeholder="data.silver"></div><div><label>Gold quote per (g)</label><input id="c_gd" type="number"></div><div><label>Silver quote per (g)</label><input id="c_sd" type="number"></div><div><label>Refresh every (sec)</label><input id="c_sec" type="number" min="1"></div></div></div>
-<div class="card"><b>Item master (barcode database)</b><p class="st" style="color:var(--m)">CSV columns: barcode,name,metal(g/s),purity,gross,stone,wastage%,makingType(g/f/p),making,stoneCharge. Items you save are also learned automatically.</p><input type="file" id="imp" accept=".csv,.txt"><div class="row"><span id="mcount"></span><button class="s" id="expm">Export</button></div></div>
+<div class="card"><b>Item master (barcode database)</b><p class="st" style="color:var(--m)">CSV columns: barcode,name,metal(g/s),purity,gross,stone,wastage%,labourType,labour,stoneCharge. Labour applies to silver only (labourType g = ₹ per gram, p = % of melting, f = flat). Items you save are also learned automatically.</p><input type="file" id="imp" accept=".csv,.txt"><div class="row"><span id="mcount"></span><button class="s" id="expm">Export</button></div></div>
 <button id="saveset" style="width:100%">Save settings</button>
 <p class="st" style="color:var(--m)">All data stays on this device (browser storage). Clearing browser data erases it — use Export in History regularly.</p>
 </section>
 </main>
-<nav><button data-t="e" class="on">Estimate</button><button data-t="h">History</button><button data-t="s">Day</button><button data-t="c">Setup</button></nav>
+<div id="fb"><span id="fbn"></span><span id="fbt"></span></div><nav><button data-t="e" class="on">Estimate</button><button data-t="h">History</button><button data-t="s">Day</button><button data-t="c">Setup</button></nav>
 <div id="cam"><video id="v" playsinline muted></video><button id="camx" class="r">Cancel</button></div>
-<div id="md" style="display:none;position:fixed;inset:0;background:#0009;z-index:50;align-items:center;justify-content:center"><div class="card" style="width:82%;max-width:340px"><p id="mq" style="font-size:16px"></p><div class="row"><button id="my">Yes</button><button class="s" id="mn">No</button></div></div></div><div id="ts" style="display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(72px + env(safe-area-inset-bottom));background:#3b2a0a;color:#ffd35a;padding:10px 16px;border-radius:20px;z-index:60;max-width:88%;text-align:center;font-size:14px"></div><div id="pa"></div>
+<div id="md" style="display:none;position:fixed;inset:0;background:#0009;z-index:50;align-items:center;justify-content:center"><div class="card" style="width:82%;max-width:340px"><p id="mq" style="font-size:16px"></p><div class="row"><button id="my">Yes</button><button class="s" id="mn">No</button></div></div></div><div id="ts" style="display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(118px + env(safe-area-inset-bottom));background:#3b2a0a;color:#ffd35a;padding:10px 16px;border-radius:20px;z-index:60;max-width:88%;text-align:center;font-size:14px"></div><div id="pa"></div>
 <script>
 const $=i=>document.getElementById(i),ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},sv=(k,v)=>{try{const j=JSON.stringify(v);localStorage.setItem(k,j);return localStorage.getItem(k)===j}catch(e){return false}};
 let _cb;const ask=(m,cb)=>{$('mq').textContent=m;$('md').style.display='flex';_cb=cb};
@@ -77,19 +77,21 @@ let set=Object.assign({gst:3,g:0,s:0,url:'',gp:'',sp:'',gd:10,sd:1000,sec:1},ld(
 const F=['barcode','name','metal','purity','gross','stone','wast','stoneC','labT','lab'],N=x=>parseFloat(x)||0,R=x=>'₹'+Math.round(x).toLocaleString('en-IN'),W=x=>(+x).toFixed(3);
 const cur=m=>set['m'+m]?set[m]:(live[m]||set[m]),base=m=>cur(m)/(m=='g'?set.gd:set.sd);
 const get=()=>{const o={};F.forEach(k=>o[k]=$('f_'+k).value);return o};
-function calc(o,rt){const net=Math.max(0,N(o.gross)-N(o.stone)),mv=net*(1+N(o.wast)/100)*(rt??base(o.metal))*N(o.purity)/99.9;const lab=o.labT=='g'?N(o.lab)*net:o.labT=='f'?N(o.lab):mv*N(o.lab)/100;return{net,mv,lab,total:mv+lab+N(o.stoneC)}}
-function lock(){F.forEach(k=>{const e=$('f_'+k);if(e.tagName=='INPUT'&&k!='barcode')e.readOnly=e.value!==''})}
-function fill(o){F.forEach(k=>{if(o[k]!==undefined&&k!='barcode')$('f_'+k).value=o[k]});lock();pv()}
-function pv(){const o=get(),c=calc(o);$('pv_net').textContent=W(c.net)+' g';$('pv_m').textContent=R(c.mv);$('pv_l').textContent=R(c.lab);$('pv_s').textContent=R(N(o.stoneC));$('pv_tot').textContent=R(c.total)}
+function calc(o,rt){const net=Math.max(0,N(o.gross)-N(o.stone)),mv=net*(1+N(o.wast)/100)*(rt??base(o.metal))*N(o.purity)/99.9;const lab=o.metal!='s'?0:o.labT=='g'?N(o.lab)*net:o.labT=='f'?N(o.lab):mv*N(o.lab)/100;return{net,mv,lab,total:mv+lab+N(o.stoneC)}}
+const DEF={g:{p:91.6,w:0.4},s:{p:92.5,w:7.5}};let fromBC=false,editing=-1;
+function setBind(i){editing=i;$('add').disabled=i>=0;$('add').textContent=i>=0?'✓ In estimate':'＋ Add to estimate';$('clr').textContent=i>=0?'＋ New item':'Clear'}
+function applyMetal(m,d){const e=$('f_metal');e.value=m;e.dataset.p=m;if(d){$('f_purity').value=DEF[m].p;$('f_wast').value=DEF[m].w}$('mkg').style.display=m=='s'?'contents':'none';if(m!='s'){$('f_lab').value='';$('f_labT').value='g';$('f_labT').dataset.p='g'}pv()}
+function fill(o){const m=o.metal=='s'?'s':'g';applyMetal(m,true);['name','purity','gross','stone','wast','stoneC'].concat(m=='s'?['labT','lab']:[]).forEach(k=>{if(o[k]!==undefined&&o[k]!=='')$('f_'+k).value=o[k]});$('f_labT').dataset.p=$('f_labT').value;fromBC=true;['name','purity','gross','stone','wast','stoneC','lab'].forEach(k=>{const e=$('f_'+k);e.readOnly=e.value!==''});pv()}
+function pv(){const o=get(),c=calc(o);$('pv_net').textContent=W(c.net)+' g';$('pv_m').textContent=R(c.mv);$('pv_l').textContent=R(c.lab);$('pv_s').textContent=R(N(o.stoneC));$('pv_tot').textContent=R(c.total);$('pv_lr').style.display=o.metal=='s'?'flex':'none';if(editing>=0&&items[editing]){o.barcode=items[editing].barcode;items[editing]=o;draw()}}
 // confirm-before-edit
 document.querySelectorAll('.G').forEach(e=>{e.dataset.p=e.value;
- if(e.tagName=='INPUT'){e.addEventListener('focus',()=>{if(e.readOnly){e.blur();ask('Edit '+e.dataset.l+'?',()=>{e.readOnly=false;e.focus()})}});
-  e.addEventListener('blur',()=>{if(e.value!==''&&e.id!='f_barcode')e.readOnly=true})}
- else{e.addEventListener('change',()=>{const nv=e.value,ap=()=>{e.value=nv;e.dataset.p=nv;if(e.id=='f_metal'&&!N($('f_purity').value))$('f_purity').value=nv=='g'?91.6:92.5;pv()};if(!N($('f_gross').value))ap();else{e.value=e.dataset.p;ask('Change '+e.dataset.l+'?',ap)}})}
+ if(e.tagName=='INPUT'){e.addEventListener('focus',()=>{if(e.readOnly){e.blur();ask('Edit '+e.dataset.l+'?',()=>{e.readOnly=false;e.focus()})}})}
+ else{e.addEventListener('change',()=>{const nv=e.value,ap=()=>{e.dataset.p=nv;if(e.id=='f_metal')applyMetal(nv,true);pv()};if(!fromBC)ap();else{e.value=e.dataset.p;ask('Change '+e.dataset.l+'?',()=>{e.value=nv;ap()})}})}
  e.addEventListener('input',pv)});
-function look(code){code=code.trim();if(!code)return;$('f_barcode').value=code;let r=master[code];
+function look(code){code=code.trim();if(!code)return;unlock();$('f_barcode').value=code;let r=master[code];
  if(!r){const p=code.split(/[|,]/);if(p.length>=6)r={name:p[1],metal:p[2],purity:p[3],gross:p[4],stone:p[5],wast:p[6],labT:p[7],lab:p[8],stoneC:p[9]}}
- if(r){$('f_metal').value=r.metal||'g';fill(r);$('f_metal').dataset.p=$('f_metal').value;$('f_labT').dataset.p=$('f_labT').value;navigator.vibrate&&navigator.vibrate(60)}else alert('Barcode not in item master. Enter details manually (or import CSV in Setup).')}
+ if(r){fill(r);navigator.vibrate&&navigator.vibrate(60);toast('Loaded: '+(r.name||code))}else alert('Barcode not in item master. Enter details manually (or import CSV in Setup).')}
+$('f_barcode').addEventListener('focus',e=>setTimeout(()=>e.target.select(),0));
 $('f_barcode').addEventListener('keydown',e=>{if(e.key=='Enter')look(e.target.value)});
 // scanner
 let stream,on=0;
@@ -103,17 +105,19 @@ async function scan(){let det;
 function stopc(){on=0;$('cam').style.display='none';stream&&stream.getTracks().forEach(t=>t.stop())}
 $('scanb').onclick=scan;$('camx').onclick=stopc;
 // estimate
-function unlock(){F.forEach(k=>{const e=$('f_'+k);e.value=k=='metal'?'g':k=='labT'?'g':'';e.readOnly=false;e.dataset.p=e.value})}
-$('clr').onclick=()=>{unlock();pv()};
-$('add').onclick=()=>{try{const o=get();if(!N(o.gross)){toast('Enter gross weight');return}o.rate=base(o.metal);items.push(o);unlock();pv();draw();toast('Added ✓ ('+items.length+' item'+(items.length>1?'s':'')+') — form cleared')}catch(err){toast('Error: '+err.message)}};
+function unlock(){setBind(-1);const m=$('f_metal').value=='s'?'s':'g';fromBC=false;F.forEach(k=>{const e=$('f_'+k);if(k!='metal'&&k!='labT')e.value='';e.readOnly=false});$('f_labT').value='g';applyMetal(m,true)}
+$('clr').onclick=()=>{unlock()};
+$('add').onclick=()=>{try{const o=get();if(!N(o.gross)){toast('Enter gross weight');return}if(N(o.stone)>=N(o.gross)){toast('Stone weight must be less than gross weight');return}if(!base(o.metal)){toast('Set the '+(o.metal=='g'?'gold':'silver')+' rate at the top first');return}items.push(o);setBind(items.length-1);draw();toast('Added ✓ ('+items.length+' item'+(items.length>1?'s':'')+') — edit fields to update it, or tap New item')}catch(err){toast('Error: '+err.message)}};
+function loadItem(i){const o=items[i];setBind(-1);F.forEach(k=>{const e=$('f_'+k);e.value=o[k]??'';e.readOnly=false});applyMetal(o.metal=='s'?'s':'g',false);$('f_labT').value=o.labT||'g';fromBC=false;F.forEach(k=>{const e=$('f_'+k);e.dataset.p=e.value});setBind(i);pv();window.scrollTo({top:0,behavior:'smooth'});toast('Editing item '+(i+1)+' — changes update the estimate')}
+function delItem(i){items.splice(i,1);if(editing==i)unlock();else if(editing>i)editing--;draw()}
 function tots(){const sub=items.reduce((a,o)=>a+calc(o,o.rate).total,0),g=$('gstOn').checked?sub*set.gst/100:0;return{sub,g,t:sub+g}}
-function draw(){$('list').innerHTML=items.map((o,i)=>{const c=calc(o,o.rate);return`<div class="it"><span>${o.name||'Item'} <small>${o.metal=='g'?'Au':'Ag'} ${o.purity} · ${W(c.net)}g<br>Metal ${R(c.mv)} · Making ${R(c.lab)} · Stone ${R(N(o.stoneC))}</small></span><span>${R(c.total)} <a href="#" onclick="items.splice(${i},1);draw();return false">✕</a></span></div>`}).join('')||'<small>No items yet</small>';const t=tots();$('sub').textContent=R(t.sub);$('gst').textContent=R(t.g);$('tot').textContent=R(t.t)}
+function draw(){$('list').innerHTML=items.map((o,i)=>{const c=calc(o,o.rate);return`<div class="it"${i==editing?' style="background:#b8860b22"':''}><span><a href="#" onclick="loadItem(${i});return false" style="color:inherit;font-weight:600">${o.name||'Item '+(i+1)}</a> <small>${o.metal=='g'?'Au':'Ag'} ${o.purity} · ${W(c.net)}g<br>Metal ${R(c.mv)}${o.metal=='s'?' · Labour '+R(c.lab):''} · Stone ${R(N(o.stoneC))}</small></span><span>${R(c.total)} <a href="#" onclick="delItem(${i});return false">✕</a></span></div>`}).join('')||'<small>No items yet</small>';const t=tots();$('sub').textContent=R(t.sub);$('gst').textContent=R(t.g);$('tot').textContent=R(t.t);$('fb').classList.toggle('has',items.length>0);$('fbn').textContent=items.length+' item'+(items.length>1?'s':'')+' in estimate';$('fbt').textContent=R(t.t)+' ▸'}
 $('gstOn').onchange=draw;
-function est(){const t=tots();return{id:Date.now(),ts:Date.now(),cust:$('cust').value,ph:$('ph').value,items:JSON.parse(JSON.stringify(items)),gstOn:$('gstOn').checked,gp:set.gst,sub:t.sub,gst:t.g,total:t.t}}
-function bill(e){const d=new Date(e.ts).toLocaleString('en-IN');return`<p>ESTIMATE (not a tax invoice)<br>${d}<br>${e.cust||''} ${e.ph||''}</p><table><tr><th>Item</th><th>Net g</th><th>Rate</th><th>Amt</th></tr>${e.items.map(o=>{const c=calc(o,o.rate);return`<tr><td>${o.name||'Item'}<br>${o.metal=='g'?'Au':'Ag'} ${o.purity}% W${o.wast||0}% Mk ${R(c.lab)}${N(o.stoneC)?' St '+R(N(o.stoneC)):''}</td><td>${W(c.net)}</td><td>${(o.rate*N(o.purity)/99.9).toFixed(0)}</td><td>${R(c.total)}</td></tr>`}).join('')}</table><p>Subtotal ${R(e.sub)}<br>${e.gstOn?'GST '+e.gp+'% '+R(e.gst)+'<br>':'GST not included<br>'}<b>TOTAL ${R(e.total)}</b></p>`}
+function est(){const t=tots();return{id:Date.now(),ts:Date.now(),cust:$('cust').value,ph:$('ph').value,items:items.map(o=>({...o,rate:base(o.metal)})),gstOn:$('gstOn').checked,gp:set.gst,sub:t.sub,gst:t.g,total:t.t}}
+function bill(e){const d=new Date(e.ts).toLocaleString('en-IN');return`<p>ESTIMATE (not a tax invoice)<br>${d}<br>${e.cust||''} ${e.ph||''}</p><table><tr><th>Item</th><th>Net g</th><th>Rate</th><th>Amt</th></tr>${e.items.map(o=>{const c=calc(o,o.rate);return`<tr><td>${o.name||'Item'}<br>${o.metal=='g'?'Au':'Ag'} ${o.purity}% W${o.wast||0}%${o.metal=='s'?' Lab '+R(c.lab):''}${N(o.stoneC)?' St '+R(N(o.stoneC)):''}</td><td>${W(c.net)}</td><td>${(o.rate*N(o.purity)/99.9).toFixed(0)}</td><td>${R(c.total)}</td></tr>`}).join('')}</table><p>Subtotal ${R(e.sub)}<br>${e.gstOn?'GST '+e.gp+'% '+R(e.gst)+'<br>':'GST not included<br>'}<b>TOTAL ${R(e.total)}</b></p>`}
 function pr(h){$('pa').innerHTML=h;window.print()}
 $('prn').onclick=()=>{if(!items.length)return alert('Add items first');pr(bill(est()))};
-$('save').onclick=()=>{if(!items.length)return alert('Add items first');const e=est();ests.unshift(e);if(!sv('je_ests',ests)){ests.shift();alert('NOT saved: browser storage is blocked or full. Open the tool from its web link in Chrome/Safari (not inside another app).');return}e.items.forEach(o=>{if(o.barcode)master[o.barcode]={name:o.name,metal:o.metal,purity:o.purity,gross:o.gross,stone:o.stone,wast:o.wast,labT:o.labT,lab:o.lab,stoneC:o.stoneC}});sv('je_master',master);items=[];$('cust').value=$('ph').value='';draw();alert('Saved on this device ('+ests.length+' estimates stored)')};
+$('save').onclick=()=>{if(editing<0&&N($('f_gross').value))return alert('Tap Add to estimate for the item in the form first');if(!items.length)return alert('Add items first');const e=est();ests.unshift(e);if(!sv('je_ests',ests)){ests.shift();alert('NOT saved: browser storage is blocked or full. Open the tool from its web link in Chrome/Safari (not inside another app).');return}e.items.forEach(o=>{if(o.barcode)master[o.barcode]={name:o.name,metal:o.metal,purity:o.purity,gross:o.gross,stone:o.stone,wast:o.wast,labT:o.labT,lab:o.lab,stoneC:o.stoneC}});sv('je_master',master);items=[];$('cust').value=$('ph').value='';unlock();draw();alert('Saved on this device ('+ests.length+' estimates stored)')};
 // history & summary
 function hist(){$('hist').innerHTML=(ests.map(e=>`<div class="card"><div class="tot"><b>${e.cust||'Walk-in'}</b><b>${R(e.total)}</b></div><small>${new Date(e.ts).toLocaleString('en-IN')} · ${e.items.length} item(s)${e.gstOn?' · GST':''}</small><div class="row"><button class="s" onclick="pr(bill(ests.find(x=>x.id==${e.id})))">Print</button><button class="s r" style="color:#b3261e;border-color:#b3261e" onclick="ask('Delete estimate?',()=>{ests=ests.filter(x=>x.id!=${e.id});sv('je_ests',ests);hist()})">Delete</button></div></div>`).join('')||'<p>No saved estimates</p>')+'<button class="s" style="width:100%" onclick="exp()">Export all (JSON)</button>'}
 window.exp=()=>dl('estimates.json',JSON.stringify(ests,null,1));
@@ -122,7 +126,7 @@ function summ(){const d=$('sd').value,L=ests.filter(e=>new Date(e.ts).toLocaleDa
  $('sum').innerHTML=`<div class="tot"><span>Estimates</span><b>${s.n}</b></div><div class="tot"><span>Gold net wt</span><b>${W(s.Au)} g</b></div><div class="tot"><span>Silver net wt</span><b>${W(s.Ag)} g</b></div><div class="tot"><span>Subtotal</span><b>${R(s.sub)}</b></div><div class="tot"><span>GST</span><b>${R(s.g)}</b></div><div class="tot big"><span>Total</span><b>${R(s.t)}</b></div>`;$('sprint').onclick=()=>pr(`<p>DAY SUMMARY ${d}</p>`+$('sum').innerHTML.replace(/<div class="tot">/g,'<div>').replace(/<\/span><b>/g,' : <b>')+`<hr><table>${L.map(e=>`<tr><td>${new Date(e.ts).toLocaleTimeString('en-IN')}</td><td>${e.cust||'Walk-in'}</td><td>${R(e.total)}</td></tr>`).join('')}</table>`)}
 $('sd').onchange=summ;
 // tabs
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.id=='t_'+b.dataset.t));if(b.dataset.t=='h')hist();if(b.dataset.t=='s'){$('sd').value=new Date().toLocaleDateString('en-CA');summ()}if(b.dataset.t=='c')cfg()});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.body.dataset.tab=b.dataset.t;document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.id=='t_'+b.dataset.t));if(b.dataset.t=='h')hist();if(b.dataset.t=='s'){$('sd').value=new Date().toLocaleDateString('en-CA');summ()}if(b.dataset.t=='c')cfg()});
 // settings
 const CK={gst:'c_gst',g:'c_g',s:'c_s',url:'c_url',gp:'c_gp',sp:'c_sp',gd:'c_gd',sd:'c_sd',sec:'c_sec'};
 function cfg(){for(const k in CK)$(CK[k]).value=set[k];$('mcount').textContent=Object.keys(master).length+' items';document.querySelectorAll('.gdl').forEach(e=>e.textContent=set.gd);document.querySelectorAll('.sdl').forEach(e=>e.textContent=set.sd)}
@@ -140,6 +144,7 @@ try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}ca
  e.addEventListener('blur',()=>{e.readOnly=true});
  e.addEventListener('change',()=>{const v=N(e.value);if(!v){rt();return}set[m]=v;set['m'+m]=true;set.rtm=Date.now();sv('je_set',set);rt()})});
 $('rs_st').onclick=()=>{if((set.mg||set.ms)&&set.url)ask('Switch back to live feed rates?',()=>{set.mg=set.ms=false;sv('je_set',set);poll()})};
-draw();cfg();poll();rt();
+$('fb').onclick=()=>$('list').scrollIntoView({behavior:'smooth',block:'center'});
+applyMetal('g',true);draw();cfg();poll();rt();
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))try{}catch(e){}
 </script></body></html>
