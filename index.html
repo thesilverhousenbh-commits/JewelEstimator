@@ -30,6 +30,7 @@ nav button{flex:1;background:none;border-radius:0;color:#cdb98a;padding:14px 4px
 <div class="card"><div class="g2"><div><label>Customer</label><input id="cust"></div><div><label>Phone</label><input id="ph" type="tel"></div></div></div>
 <div class="card">
 <div class="row"><input id="f_barcode" class="G" data-l="Barcode" placeholder="Barcode / tag no." enterkeyhint="go"><button id="scanb" style="flex:0 0 auto">📷 Scan</button></div>
+<div id="bcm" style="display:none;font-size:13px;margin:0 0 8px"></div>
 <div class="g2">
 <div style="grid-column:1/3"><label>Item name</label><input id="f_name" class="G" data-l="Item name" placeholder="e.g. Chain, Ring, Anklet"></div>
 <div style="grid-column:1/3"><div class="seg"><button type="button" data-m="g">Gold</button><button type="button" data-m="s">Silver</button></div><select id="f_metal" class="G" data-l="Metal" style="display:none"><option value="g">Gold</option><option value="s">Silver</option></select></div>
@@ -94,11 +95,16 @@ document.querySelectorAll('.G').forEach(e=>{e.dataset.p=e.value;
  if(e.tagName=='INPUT'){e.addEventListener('focus',()=>{if(e.readOnly){e.blur();ask('Edit '+e.dataset.l+'?',()=>{e.readOnly=false;e.focus()})}})}
  else{e.addEventListener('change',()=>{const nv=e.value,ap=()=>{e.dataset.p=nv;if(e.id=='f_metal')applyMetal(nv,true);pv()};if(!fromBC)ap();else{e.value=e.dataset.p;ask('Change '+e.dataset.l+'?',()=>{e.value=nv;ap()})}})}
  e.addEventListener('input',pv)});
-function look(code){code=code.trim();if(!code)return;unlock();$('f_barcode').value=code;let r=master[code];
+let bT,lastBC='';
+function look(code){clearTimeout(bT);code=code.trim();if(!code)return;lastBC=code;let r=master[code];
  if(!r){const p=code.split(/[|,]/);if(p.length>=6)r={name:p[1],metal:p[2],purity:p[3],gross:p[4],stone:p[5],wast:p[6],labT:p[7],lab:p[8],stoneC:p[9]}}
- if(r){fill(r);navigator.vibrate&&navigator.vibrate(60);toast('Loaded: '+(r.name||code))}else alert('Barcode not in item master. Enter details manually (or import CSV in Setup).')}
+ const m=$('bcm'),bx=$('f_barcode');m.style.display='block';
+ if(r){unlock();bx.value=code;fill(r);bx.classList.remove('bad');m.style.color='#2e7d32';m.textContent='✓ Found: '+(r.name||code)+' — details filled from item master';navigator.vibrate&&navigator.vibrate(60)}
+ else{bx.classList.add('bad');m.style.color='#b3261e';m.textContent=Object.keys(master).length?'✕ Barcode "'+code+'" not found in the item master. Check the number, or enter the details manually and Save — it will be remembered.':'✕ The item master is empty. Import your item list in Setup, or enter the details manually.';navigator.vibrate&&navigator.vibrate([80,60,80]);toast('Barcode not found: '+code)}}
 $('f_barcode').addEventListener('focus',e=>setTimeout(()=>e.target.select(),0));
-$('f_barcode').addEventListener('keydown',e=>{if(e.key=='Enter')look(e.target.value)});
+$('f_barcode').addEventListener('keydown',e=>{if(e.key=='Enter'){e.preventDefault();look(e.target.value)}});
+$('f_barcode').addEventListener('input',e=>{clearTimeout(bT);$('bcm').style.display='none';e.target.classList.remove('bad');const v=e.target.value.trim();if(v.length>=3)bT=setTimeout(()=>look(v),450)});
+$('f_barcode').addEventListener('blur',e=>{const v=e.target.value.trim();if(v&&v!==lastBC)look(v)});
 // scanner
 let stream,on=0;
 async function scan(){let det;
@@ -111,7 +117,7 @@ async function scan(){let det;
 function stopc(){on=0;$('cam').style.display='none';stream&&stream.getTracks().forEach(t=>t.stop())}
 $('scanb').onclick=scan;$('camx').onclick=stopc;
 // estimate
-function unlock(){setBind(-1);const m=$('f_metal').value=='s'?'s':'g';fromBC=false;F.forEach(k=>{const e=$('f_'+k);if(k!='metal'&&k!='labT')e.value='';e.readOnly=false});$('f_labT').value='g';applyMetal(m,true)}
+function unlock(){setBind(-1);$('bcm').style.display='none';$('f_barcode').classList.remove('bad');const m=$('f_metal').value=='s'?'s':'g';fromBC=false;F.forEach(k=>{const e=$('f_'+k);if(k!='metal'&&k!='labT')e.value='';e.readOnly=false});$('f_labT').value='g';applyMetal(m,true)}
 $('clr').onclick=()=>{unlock()};
 $('add').onclick=()=>{try{const o=get();if(!N(o.gross)){flag('f_gross');toast('Enter gross weight');return}if(N(o.stone)>=N(o.gross)){toast('Stone weight must be less than gross weight');return}if(!base(o.metal)){flag(o.metal=='g'?'rg':'rs');toast('Set the '+(o.metal=='g'?'gold':'silver')+' rate at the top first');return}items.push(o);setBind(items.length-1);draw();toast('Added ✓ ('+items.length+' item'+(items.length>1?'s':'')+') — edit fields to update it, or tap New item')}catch(err){toast('Error: '+err.message)}};
 function loadItem(i){const o=items[i];setBind(-1);F.forEach(k=>{const e=$('f_'+k);e.value=o[k]??'';e.readOnly=false});applyMetal(o.metal=='s'?'s':'g',false);$('f_labT').value=o.labT||'g';fromBC=false;F.forEach(k=>{const e=$('f_'+k);e.dataset.p=e.value});setBind(i);pv();window.scrollTo({top:0,behavior:'smooth'});toast('Editing item '+(i+1)+' — changes update the estimate')}
